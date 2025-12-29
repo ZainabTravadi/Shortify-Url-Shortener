@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+@layer base {
+  :root {
+    /* Neumorphic Background */
+    --background: 220 9% 93%;
+    --foreground: 220 20% 20%;
+
+    /* Card surfaces */
+    --card: 220 9% 93%;
+    --card-foreground: 220 20% 20%;
+
+    --popover: 220 9% 93%;
+    --popover-foreground: 220 20% 20%;
+
+    /* Primary - Soft Violet */
+    --primary: 244 100% 69%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - Subtle gray */
+    --secondary: 220 9% 88%;
+    --secondary-foreground: 220 20% 30%;
+
+    /* Muted */
+    --muted: 220 9% 85%;
+    --muted-foreground: 220 10% 50%;
+
+    /* Accent */
+    --accent: 244 100% 69%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Success */
+    --success: 122 39% 49%;
+    --success-foreground: 0 0% 100%;
+
+    /* Destructive / Error */
+    --destructive: 1 77% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 9% 85%;
+    --input: 220 9% 93%;
+    --ring: 244 100% 69%;
+
+    --radius: 1rem;
+
+    /* Neumorphic Shadows */
+    --shadow-outer: 8px 8px 16px rgba(0, 0, 0, 0.08);
+    --shadow-highlight: -8px -8px 16px rgba(255, 255, 255, 0.9);
+    --shadow-inset: inset 4px 4px 8px rgba(0, 0, 0, 0.08), inset -4px -4px 8px rgba(255, 255, 255, 0.9);
+    --shadow-pressed: inset 2px 2px 4px rgba(0, 0, 0, 0.1), inset -2px -2px 4px rgba(255, 255, 255, 0.7);
+
+    /* Combined neumorphic shadow */
+    --neu-shadow: 8px 8px 16px rgba(0, 0, 0, 0.08), -8px -8px 16px rgba(255, 255, 255, 0.9);
+    --neu-shadow-sm: 4px 4px 8px rgba(0, 0, 0, 0.06), -4px -4px 8px rgba(255, 255, 255, 0.8);
+  }
+
+  .dark {
+    --background: 220 20% 10%;
+    --foreground: 220 9% 93%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  /* Neumorphic utilities */
+  .neu-raised {
+    box-shadow: var(--neu-shadow);
+  }
+
+  .neu-raised-sm {
+    box-shadow: var(--neu-shadow-sm);
+  }
+
+  .neu-inset {
+    box-shadow: var(--shadow-inset);
+  }
+
+  .neu-pressed {
+    box-shadow: var(--shadow-pressed);
+  }
+
+  /* Animations */
+  @keyframes pulse-subtle {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-pulse-subtle {
+    animation: pulse-subtle 2s ease-in-out infinite;
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 1s linear infinite;
+  }
+}
