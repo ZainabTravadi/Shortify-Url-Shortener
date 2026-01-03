@@ -1,91 +1,66 @@
 ## **Derived Backend Needs**
 
-Your table headers are PERFECT. We’ll fill them **properly**, not vaguely.
+---
+
+## 1. Establish the Analysis Framework
+
+Frontend analysis is not documentation—it is a analytical lens.
+
+From this perspective, we ask:
+
+> "If the frontend requires capability X, what must the backend guarantee to ensure X functions reliably?"
 
 ---
 
-## 1️⃣ Start with a mindset shift (important)
+## 2. Column 1: Backend Needs (Derived)
 
-Frontend analysis is **not documentation**.
-Frontend analysis is a **lens**.
+Based on frontend capabilities, the backend must provide:
 
-From that lens, we ask:
+* Accept URL input
+* Return shortened URL
+* Guarantee uniqueness
+* Persist mappings
+* Handle duplicate requests
+* Fail gracefully
+* Respond with low latency
 
-> “If the frontend promises X, what must the backend guarantee so X never breaks?”
-
-That’s it.
-
----
-
-## 2️⃣ Column 1: **Derived Backend Needs**
-
-From your FE capabilities, backend MUST provide:
-
-### 🔑 Backend Needs (derived, not imagined)
-
-* Ability to **accept a URL**
-* Ability to **return a short URL**
-* Ability to **guarantee uniqueness**
-* Ability to **persist mapping**
-* Ability to **handle duplicate requests**
-* Ability to **fail gracefully**
-* Ability to **respond fast**
-
-👉 Notice:
-No DB names. No Redis. No scaling buzzwords.
-
-Just **needs**.
+Note: This identifies functional needs only, without prescribing implementation details.
 
 ---
 
-## 3️⃣ Column 2: **Implicit assumptions → Explicit contracts**
+## 3. Column 2: Implicit Assumptions to Explicit Contracts
 
-Frontend ALWAYS assumes things silently.
-System design = **making assumptions explicit**.
+Frontend systems operate on implicit assumptions. System design requires making these assumptions explicit.
 
-### Example:
-
-| Implicit FE Assumption                  | Explicit Backend Contract                  |
-| --------------------------------------- | ------------------------------------------ |
-| “If I click shorten, I’ll get a result” | Backend must respond with success OR error |
-| “Same URL won’t break the system”       | Backend must handle duplicates             |
-| “Result won’t change randomly”          | Mapping must be stable                     |
-| “Short URL will work later”             | Backend must persist data                  |
-| “Errors are readable”                   | Backend returns structured errors          |
-
-🔥 This column is **gold**. Interviewers LOVE this.
+| Frontend Assumption | Backend Contract |
+|---|---|
+| Shortening request produces a result | Backend responds with success or structured error |
+| Duplicate URLs are safe | Backend handles duplicate requests |
+| Results remain consistent | Mappings are stable and persistent |
+| Short URLs work indefinitely | Data is persisted durably |
+| Errors are actionable | Errors follow a consistent format |
 
 ---
 
-## 4️⃣ Column 3: **Derive backend requirements from FE analysis**
+## 4. Column 3: Backend Requirements
 
-Now we convert contracts → requirements.
+Convert contracts into logical requirements:
 
-### Backend Requirements (derived logically)
-
-* Expose an HTTP API
-* Validate URL server-side
-* Generate short code
-* Ensure uniqueness
-* Store `{ short → long }`
-* Handle idempotency
-* Return consistent response format
-* Handle failures predictably
-
-⚠️ Still no “how”. Only “what”.
+* Expose HTTP API endpoints
+* Validate URLs server-side
+* Generate unique short codes
+* Store short-to-long URL mappings
+* Support idempotent operations
+* Return consistent response formats
+* Handle errors predictably
 
 ---
 
-## 5️⃣ Column 4: **Backend requirements section (FINAL FORM)**
-
-This is what you actually write in your doc 👇
-
-```md
-## Backend Requirements
+## 5. Column 4: Backend Requirements (Final)
 
 ### API
 - Accept URL shortening requests
-- Return a shortened URL
+- Return shortened URL
 
 ### Validation
 - Validate URL format
@@ -93,42 +68,34 @@ This is what you actually write in your doc 👇
 
 ### Uniqueness
 - Generate unique short codes
-- Avoid collisions
+- Prevent collisions
 
 ### Persistence
-- Store short → long URL mapping
-- Ensure durability
+- Store short-to-long URL mappings
+- Ensure data durability
 
 ### Idempotency
-- Same input may return same output
-- Avoid duplicate records
+- Return consistent results for identical requests
+- Prevent duplicate entries
 
 ### Error Handling
 - Return structured error responses
-- Use proper HTTP status codes
+- Use appropriate HTTP status codes
 
 ### Performance
-- Low latency for creation and redirect
-```
-
-This is **clean, interview-grade**.
+- Minimize latency for creation and retrieval
 
 ---
 
-## 6️⃣ MOST IMPORTANT CONCEPT TODAY (don’t skip)
+## 6. Idempotency Requirement
 
-### 🔥 Idempotency (beginner version)
+Frontend scenarios that trigger duplicate requests:
 
-Frontend reality:
+* User double-clicks the submit button
+* Network timeouts trigger automatic retries
+* Browser resends requests
 
-* User double-clicks
-* Network retries
-* Browser resends request
+Backend requirement:
 
-Backend MUST assume:
+**Identical requests must produce identical results without creating duplicate entries.**
 
-> “Same request can come multiple times”
-
-So backend requirement becomes:
-
-* **Do not create multiple entries for same logical request**
