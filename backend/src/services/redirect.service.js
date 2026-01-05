@@ -1,6 +1,14 @@
+const urlStore = require("../store/url.store");
+
 class RedirectService {
   resolve(code) {
-    // redirect resolution logic will live here
+    const longUrl = urlStore.find(code);
+
+    if (!longUrl) {
+      throw new Error("NOT_FOUND");
+    }
+
+    return longUrl;
   }
 }
 
