@@ -1,9 +1,9 @@
-#💙🤍 URL Shortener (Shortify)
+# 💙🤍 URL Shortener (Shortify)
 
 A simple and clean URL shortener that converts long links into short, shareable URLs.
 Built to understand backend fundamentals, system design basics, and real-world deployment.
 
-##💙 Features
+## 💙 Features
 
 * 🔗 Shorten long URLs instantly
 * 🚀 Fast redirection using short codes
@@ -11,20 +11,20 @@ Built to understand backend fundamentals, system design basics, and real-world d
 * 🌍 Publicly accessible links
 * 🤍 Simple, minimal API design
 
-##🤍 Tech Stack
+## 🤍 Tech Stack
 
 * ⚙️ Node.js
 * 🚏 Express.js
 * 🍃 MongoDB (Atlas)
 * ☁️ Heroku (Deployment)
 
-##💙 Usage
+## 💙 Usage
 
 * Paste a long URL
 * Generate a short link
 * Share the short URL anywhere
 * Open the short link to redirect instantly
 
-##🤍 Status
+## 🤍 Status
 🚧 Personal learning project
 🌱 Built to practice backend development, databases, and deployment
