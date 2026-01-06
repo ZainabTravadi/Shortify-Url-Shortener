@@ -1,22 +1,32 @@
+const ShortUrl = require("../models/shortUrl.model");
 const generateCode = require("../utils/code-generator");
-const urlStore = require("../store/url.store");
+const isValidUrl = require("../utils/validate-url");
 
 class UrlService {
-  createShortUrl(longUrl) {
-    if (!longUrl || typeof longUrl !== "string") {
+  async createShortUrl(longUrl) {
+    if (!isValidUrl(longUrl)) {
       throw new Error("INVALID_URL");
+    }
+
+    const existing = await ShortUrl.findOne({ longUrl });
+    if (existing) {
+      return {
+        code: existing.code,
+        shortUrl: `${process.env.BASE_URL}/${existing.code}`,
+        longUrl
+      };
     }
 
     let code;
     do {
       code = generateCode();
-    } while (urlStore.exists(code));
+    } while (await ShortUrl.exists({ code }));
 
-    urlStore.save(code, longUrl);
+    await ShortUrl.create({ code, longUrl });
 
     return {
       code,
-      shortUrl: `http://localhost:8080/${code}`,
+      shortUrl: `${process.env.BASE_URL}/${code}`,
       longUrl
     };
   }

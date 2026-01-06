@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState } from 'react';
 import { NeuCard } from '@/components/NeuCard';
 import { NeuInput } from '@/components/NeuInput';
 import { NeuButton } from '@/components/NeuButton';
@@ -14,15 +14,16 @@ const Index = () => {
 
   const isValidUrl = (urlString: string): boolean => {
     try {
-      const url = new URL(urlString);
-      return url.protocol === 'http:' || url.protocol === 'https:';
+      const parsed = new URL(urlString);
+      return parsed.protocol === 'http:' || parsed.protocol === 'https:';
     } catch {
       return false;
     }
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleShorten = async () => {
+    console.log('API BASE:', import.meta.env.VITE_API_BASE_URL);
+
     setError('');
     setShortUrl('');
 
@@ -38,15 +39,28 @@ const Index = () => {
 
     setIsLoading(true);
 
-    // Simulate API call - replace with actual FastAPI backend call
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Mock shortened URL for demo
-      const mockShortCode = Math.random().toString(36).substring(2, 8);
-      setShortUrl(`https://short.ly/${mockShortCode}`);
-    } catch {
-      setError('Failed to shorten URL. Please try again.');
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/shorten`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ longUrl: url })
+        }
+      );
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || 'Failed to shorten URL');
+      }
+
+      const data = await response.json();
+      setShortUrl(data.shortUrl);
+    } catch (err: any) {
+      console.error('SHORTEN ERROR:', err);
+      setError(err.message || 'Failed to shorten URL. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -69,49 +83,41 @@ const Index = () => {
             </p>
           </header>
 
-          {/* URL Input Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <NeuInput
-                type="text"
-                placeholder="Paste your long URL here…"
-                value={url}
-                onChange={(e) => {
-                  setUrl(e.target.value);
-                  if (error) setError('');
-                }}
-                error={!!error}
-                aria-label="URL input"
-                aria-describedby={error ? "url-error" : undefined}
-              />
-            </div>
+          {/* Input */}
+          <div className="space-y-5">
+            <NeuInput
+              type="text"
+              placeholder="Paste your long URL here…"
+              value={url}
+              onChange={(e) => {
+                setUrl(e.target.value);
+                if (error) setError('');
+              }}
+              error={!!error}
+            />
 
             <NeuButton
-              type="submit"
               variant="primary"
               isLoading={isLoading}
+              onClick={handleShorten}
             >
               Shorten URL
             </NeuButton>
-          </form>
+          </div>
 
-          {/* Error State */}
-          {error && (
-            <ErrorMessage message={error} />
-          )}
+          {/* Error */}
+          {error && <ErrorMessage message={error} />}
 
-          {/* Result Section */}
-          {shortUrl && !error && (
-            <ResultCard shortUrl={shortUrl} />
-          )}
+          {/* Result */}
+          {shortUrl && !error && <ResultCard shortUrl={shortUrl} />}
         </NeuCard>
 
         {/* Footer */}
         <footer className="mt-10 text-center">
           <p className="text-xs text-muted-foreground/60 mb-4">
-            Built with FastAPI, PostgreSQL & Redis
+            Built with Node.js, Express & MongoDB
           </p>
-          
+
           <div className="flex items-center justify-center gap-3">
             <NeuButton
               variant="icon"
@@ -121,7 +127,7 @@ const Index = () => {
             >
               <Github className="w-4 h-4" />
             </NeuButton>
-            
+
             <NeuButton
               variant="icon"
               onClick={() => window.open('#', '_blank')}
