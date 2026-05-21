@@ -4,7 +4,7 @@ import { NeuInput } from '@/components/NeuInput';
 import { NeuButton } from '@/components/NeuButton';
 import { ResultCard } from '@/components/ResultCard';
 import { ErrorMessage } from '@/components/ErrorMessage';
-import { Link2, Github, Briefcase } from 'lucide-react';
+import { Link2, Github, Briefcase, Linkedin } from 'lucide-react';
 
 const Index = () => {
   const [url, setUrl] = useState('');
@@ -128,14 +128,16 @@ const Index = () => {
               <Github className="w-4 h-4" />
             </NeuButton>
 
-            <NeuButton
-              variant="icon"
-              onClick={() => window.open('#', '_blank')}
-              title="Portfolio"
-              className="w-10 h-10"
+            <a
+              href="https://www.linkedin.com/in/zainab-travadi-119a83373/"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="LinkedIn"
+              aria-label="LinkedIn"
+              className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-background text-muted-foreground shadow-neu-sm transition-all duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 hover:text-primary hover:-translate-y-0.5 active:shadow-neu-pressed"
             >
-              <Briefcase className="w-4 h-4" />
-            </NeuButton>
+              <Linkedin className="w-4 h-4" />
+            </a>
           </div>
         </footer>
       </main>
